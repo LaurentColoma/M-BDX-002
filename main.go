@@ -24,7 +24,7 @@ func OpenFileHandler(err error) bool {
 }
 
 func FirstLineHandler(line string) bool {
-	match, _ := regexp.MatchString("[0-9] [0-9] [0-9]", line)
+	match, _ := regexp.MatchString("[0-9][\t\n\v\f\r ][0-9][\t\n\v\f\r ][0-9]", line)
 	if match == false {
 		fmt.Println("Error: format of first line is wrong")
 		os.Exit(0)
@@ -33,7 +33,7 @@ func FirstLineHandler(line string) bool {
 }
 
 func LastLineHandler(line string) bool {
-	match, _ := regexp.MatchString("[0-9] [0-9] [0-9] [0-9]", line)
+	match, _ := regexp.MatchString("[0-9][\t\n\v\f\r ][0-9][\t\n\v\f\r ][0-9][\t\n\v\f\r ][0-9]", line)
 	if match == false {
 		fmt.Println("Error: format of last line is wrong")
 		os.Exit(0)
@@ -42,7 +42,7 @@ func LastLineHandler(line string) bool {
 }
 
 func ParcelHandler(line string) bool {
-	match, _ := regexp.MatchString("[A-Za-z] [0-9] [0-9] [A-Za-z]", line)
+	match, _ := regexp.MatchString("[A-Za-z][\t\n\v\f\r ][0-9][\t\n\v\f\r ][0-9][\t\n\v\f\r ][A-Za-z]", line)
 	if match == false {
 		fmt.Println("Error: format of parcel line is wrong")
 	}
@@ -50,7 +50,7 @@ func ParcelHandler(line string) bool {
 }
 
 func PalletTruckHandler(line string) bool {
-	match, _ := regexp.MatchString("[A-Za-z] [0-9] [0-9]", line)
+	match, _ := regexp.MatchString("[A-Za-z][\t\n\v\f\r ][0-9][\t\n\v\f\r ][0-9]", line)
 	if match == false {
 		fmt.Println("Error: format of pallet truck is wrong")
 	}
