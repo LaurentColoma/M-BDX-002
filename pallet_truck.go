@@ -1,3 +1,5 @@
+package palletTruck
+
 import (
 	"fmt"
 )
@@ -7,7 +9,7 @@ type Position struct {
 	y int
 }
 
-funct isAdjacent(pos1 Position, pos2 Position) bool {
+func isAdjacent(pos1 Position, pos2 Position) bool {
 	return (
 		(pos1.x + 1 == pos2.x && pos1.y == pos2.y) ||
 		(pos1.x - 1 == pos2.x && pos1.y == pos2.y) ||

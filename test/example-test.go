@@ -3,6 +3,7 @@ package main
 import	{
 	"testing"
 	"fmt"
+	"github.com/rakyll/gotest"
 }
 
 func	TestInput(t* testing.T) {
