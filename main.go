@@ -87,6 +87,8 @@ func ParsingHandler(line string, nb_lines int, count int) bool {
 }
 
 func main() {
+	game := mapCoords
+
 	if NbArgsHandler() == false {
 		os.Exit(0)
 	}
@@ -117,5 +119,10 @@ func main() {
 	}
 	file.Close()
 
+	if game.roundLeft == 0 {
+		fmt.Println("🙂")
+	} else {
+		fmt.Println("😎")
+	}
 	return
 }
