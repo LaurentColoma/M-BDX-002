@@ -54,7 +54,7 @@ func FirstLineHandler(line string /*, warehouse Warehouse*/) /*, Warehouse */ {
 }
 
 // Check if the last line match with awaited format
-func LastLineHandler(line string /*, warehouse Warehouse) /*, Truck */ {
+func LastLineHandler(line string /*, warehouse Warehouse */) /*, Truck */ {
 	match, _ := regexp.MatchString(`(\d+)\s*(\d+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
 		fmt.Println("Error: format of Truck line is wrong\n😱")
