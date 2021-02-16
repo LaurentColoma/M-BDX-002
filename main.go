@@ -12,7 +12,7 @@ import (
 // Check if the number of arguments is correct
 func NbArgsHandler() bool {
 	if len(os.Args) < 2 {
-		fmt.Println("Error: wrong number of arguments\n😱")
+		fmt.Println("😱\nError: wrong number of arguments")
 		os.Exit(0)
 	}
 	return true
@@ -21,7 +21,7 @@ func NbArgsHandler() bool {
 // Check if the file can be opened
 func OpenFileHandler(err error) bool {
 	if err != nil {
-		fmt.Println("Error: file not supported\n😱")
+		fmt.Println("😱\nError: file not supported")
 		os.Exit(0)
 	}
 	return true
@@ -31,7 +31,7 @@ func OpenFileHandler(err error) bool {
 func FirstLineHandler(line string /*, warehouse Warehouse*/) /*, Warehouse */ {
 	match, _ := regexp.MatchString(`(\d+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
-		fmt.Println("Error: format of Warehouse line is wrong\n😱")
+		fmt.Println("😱\nError: format of Warehouse line is wrong")
 		fmt.Println(line)
 		os.Exit(0)
 	}
@@ -39,11 +39,11 @@ func FirstLineHandler(line string /*, warehouse Warehouse*/) /*, Warehouse */ {
 	//Following lines are used to split the different string in the line
 	data := strings.Fields(line)
 	if data[0] <= "0" || data[1] <= "0" {
-		fmt.Println("Error: warehouse cannot be null\n😱")
+		fmt.Println("😱\nError: warehouse cannot be null")
 		os.Exit(0)
 	}
 	if data[2] < "10" || data[2] > "100000" {
-		fmt.Println("Error: number of turn is out of range\n😱")
+		fmt.Println("😱\nError: number of turn is out of range")
 		os.Exit(0)
 	}
 	/*
@@ -54,10 +54,10 @@ func FirstLineHandler(line string /*, warehouse Warehouse*/) /*, Warehouse */ {
 }
 
 // Check if the last line match with awaited format
-func LastLineHandler(line string /*, warehouse Warehouse */) /*, Truck */ {
+func LastLineHandler(line string /*, warehouse Warehouse) /*, Truck */ {
 	match, _ := regexp.MatchString(`(\d+)\s*(\d+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
-		fmt.Println("Error: format of Truck line is wrong\n😱")
+		fmt.Println("😱\nError: format of Truck line is wrong")
 		fmt.Println(line)
 		os.Exit(0)
 	}
@@ -83,7 +83,7 @@ func LastLineHandler(line string /*, warehouse Warehouse */) /*, Truck */ {
 func ParcelHandler(line string /*warehouse Warehouse*/) /* Parcel */ {
 	match, _ := regexp.MatchString(`(\w+)\s*(\d+)\s*(\d+)\s*(\w+)`, line)
 	if match == false {
-		fmt.Println("Error: format of Parcel line is wrong\n😱")
+		fmt.Println("😱\nError: format of Parcel line is wrong")
 		fmt.Println(line)
 		os.Exit(0)
 	}
@@ -113,7 +113,7 @@ func ParcelHandler(line string /*warehouse Warehouse*/) /* Parcel */ {
 func PalletTruckHandler(line string /*warehouse Warehouse*/) /*PalletTruck*/ {
 	match, _ := regexp.MatchString(`(\w+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
-		fmt.Println("Error: format of Pallet Truck is wrong\n😱")
+		fmt.Println("😱\nError: format of Pallet Truck is wrong")
 		fmt.Println(line)
 		os.Exit(0)
 	}
