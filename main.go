@@ -7,17 +7,6 @@ import (
 	"regexp"
 )
 
-// mapCoords stores every infos about the passed file
-type mapCoords struct {
-	roundLeft         int      // number of total rounds left to be decremented each turn
-	truckCapacity     int      // admissible charge by the truck, shoudln't change
-	truckBeforeArrive int      // decrementive rounds when the truck has to leave (set by the 3rd value of truck array)
-	size              [2]int   // size of the map
-	truck             [3]int   // truck position and number of round required when it leaves
-	boxes             [][3]int // first dimension is number of boxes, second dimension values are x and y positions
-	pallets           [][2]int // first dimension is number of pallets, second dimension values are x and y positions
-}
-
 // NbArgsHandler check the numbers of parameters
 func NbArgsHandler() bool {
 	if len(os.Args) < 2 {
@@ -117,12 +106,6 @@ func main() {
 		count += 1
 	}
 	file.Close()
-	game := mapCoords{roundLeft: 0, truckCapacity: 0}
 
-	if game.roundLeft == 0 {
-		fmt.Println("🙂")
-	} else {
-		fmt.Println("😎")
-	}
 	return
 }
