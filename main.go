@@ -87,7 +87,6 @@ func ParsingHandler(line string, nb_lines int, count int) bool {
 }
 
 func main() {
-	game := mapCoords
 
 	if NbArgsHandler() == false {
 		os.Exit(0)
@@ -118,6 +117,7 @@ func main() {
 		count += 1
 	}
 	file.Close()
+	game := mapCoords{roundLeft: 0, truckCapacity: 0}
 
 	if game.roundLeft == 0 {
 		fmt.Println("🙂")
