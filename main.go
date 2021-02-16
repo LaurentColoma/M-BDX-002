@@ -7,17 +7,30 @@ import (
 	"regexp"
 )
 
+// mapCoords stores every infos about the passed file
+type mapCoords struct {
+	roundLeft         int      // number of total rounds left to be decremented each turn
+	truckCapacity     int      // admissible charge by the truck, shoudln't change
+	truckBeforeArrive int      // decrementive rounds when the truck has to leave (set by the 3rd value of truck array)
+	size              [2]int   // size of the map
+	truck             [3]int   // truck position and number of round required when it leaves
+	boxes             [][3]int // first dimension is number of boxes, second dimension values are x and y positions
+	pallets           [][2]int // first dimension is number of pallets, second dimension values are x and y positions
+}
+
+// NbArgsHandler check the numbers of parameters
 func NbArgsHandler() bool {
 	if len(os.Args) < 2 {
-		fmt.Println("Error: wrong number of arguments")
+		fmt.Println("Error: wrong number of arguments\n😱")
 		os.Exit(0)
 	}
 	return true
 }
 
+// OpenFileHandler tries to open the file
 func OpenFileHandler(err error) bool {
 	if err != nil {
-		fmt.Println("Error: file not supported")
+		fmt.Println("Error: file not supported\n😱")
 		os.Exit(0)
 	}
 	return true
@@ -26,7 +39,7 @@ func OpenFileHandler(err error) bool {
 func FirstLineHandler(line string) bool {
 	match, _ := regexp.MatchString("[0-9] [0-9] [0-9]", line)
 	if match == false {
-		fmt.Println("Error: format of first line is wrong")
+		fmt.Println("Error: format of first line is wrong\n😱")
 		os.Exit(0)
 	}
 	return match
@@ -35,7 +48,7 @@ func FirstLineHandler(line string) bool {
 func LastLineHandler(line string) bool {
 	match, _ := regexp.MatchString("[0-9] [0-9] [0-9] [0-9]", line)
 	if match == false {
-		fmt.Println("Error: format of last line is wrong")
+		fmt.Println("Error: format of last line is wrong\n😱")
 		os.Exit(0)
 	}
 	return match
@@ -44,7 +57,7 @@ func LastLineHandler(line string) bool {
 func ParcelHandler(line string) bool {
 	match, _ := regexp.MatchString("[A-Za-z] [0-9] [0-9] [A-Za-z]", line)
 	if match == false {
-		fmt.Println("Error: format of parcel line is wrong")
+		fmt.Println("Error: format of parcel line is wrong\n😱")
 	}
 	return match
 }
@@ -52,7 +65,7 @@ func ParcelHandler(line string) bool {
 func PalletTruckHandler(line string) bool {
 	match, _ := regexp.MatchString("[A-Za-z] [0-9] [0-9]", line)
 	if match == false {
-		fmt.Println("Error: format of pallet truck is wrong")
+		fmt.Println("Error: format of pallet truck is wrong\n😱")
 	}
 	return match
 }
