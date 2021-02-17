@@ -57,7 +57,7 @@ const (
 )
 
 // Check if a position is valid for a pallet truck
-func checkPosition(pos position, wh *Warehouse) bool {
+func CheckPosition(pos position, wh *Warehouse) bool {
 	if pos.X >= wh.Width || pos.X < 0 || pos.Y >= wh.Height || pos.Y < 0 {
 		fmt.Println("Error: Cannot move outside of warehouse")
 		return false
@@ -78,7 +78,7 @@ func checkPosition(pos position, wh *Warehouse) bool {
 }
 
 // Return a new position that have applied the direction move
-func move(pos position, direction MoveDirection) (newPos position) {
+func Move(pos position, direction MoveDirection) (newPos position) {
 	newPos = pos
 	switch direction {
 	case UP:
@@ -93,7 +93,7 @@ func move(pos position, direction MoveDirection) (newPos position) {
 	return
 }
 
-func applyPosition(pt *PalletTruck, pos position) {
+func ApplyPosition(pt *PalletTruck, pos position) {
 	pt.Pos = pos
 }
 
@@ -102,7 +102,7 @@ func remove(s []Parcel, i int) []Parcel {
 	return s[:len(s)-1]
 }
 
-func peekParcel(pt *PalletTruck, wh *Warehouse, idx int) bool {
+func PeekParcel(pt *PalletTruck, wh *Warehouse, idx int) bool {
 	if isAdjacent(pt.Pos, wh.Parcels[idx].Pos) {
 		pt.Parcel = wh.Parcels[idx]
 		wh.Parcels = remove(wh.Parcels, idx)

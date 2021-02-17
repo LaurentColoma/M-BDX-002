@@ -42,9 +42,9 @@ func main() {
 	wh, _ := json.MarshalIndent(warehouse, "", " ")
 	fmt.Println(string(wh))
 	// if loop.GameLoop(warehouse) == 1 {
-	// 	println("smiley cool")
+	// 	fmt.println("smiley cool")
 	// } else {
-	// 	println("smiley")
+	// 	fmt.println("smiley")
 	// }
 	return
 }
