@@ -161,7 +161,7 @@ func ParsingHandler(line string, nb_lines int, count int, warehouse *gameData.Wa
 		warehouse.PalletTrucks = append(warehouse.PalletTrucks, PalletTruckHandler(line, warehouse))
 		return
 	}
-	if len(line) == 4 {
+	if len(testLine) == 4 {
 		warehouse.Parcels = append(warehouse.Parcels, ParcelHandler(line, warehouse))
 		return
 	}
