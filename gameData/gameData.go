@@ -92,7 +92,7 @@ func move(pos position, direction MoveDirection) (newPos position) {
 	return
 }
 
-func applyPosition(pt PalletTruck, pos position) {
+func applyPosition(pt *PalletTruck, pos position) {
 	pt.Pos = pos
 }
 
@@ -101,7 +101,7 @@ func remove(s []Parcel, i int) []Parcel {
 	return s[:len(s)-1]
 }
 
-func peekParcel(pt PalletTruck, wh Warehouse, idx int) bool {
+func peekParcel(pt *PalletTruck, wh *Warehouse, idx int) bool {
 	if isAdjacent(pt.Pos, wh.Parcels[idx].Pos) {
 		pt.Parcel = wh.Parcels[idx]
 		wh.Parcels = remove(wh.Parcels, idx)
