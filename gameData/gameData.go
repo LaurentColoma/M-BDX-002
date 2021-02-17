@@ -32,7 +32,7 @@ type Storage struct {
 type Parcel struct {
 	Pos    position
 	Name   string
-	Color  string
+	Weight int
 }
 
 type Warehouse struct {

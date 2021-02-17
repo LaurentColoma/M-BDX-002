@@ -7,7 +7,7 @@ import (
 )
 
 func gameLoop(warehouse gameData.Warehouse) {
-	for i := 0; i < warehouse.nbTurn; i++ {
+	for i := 0; i < warehouse.NbTurn; i++ {
 		fmt.Printf("tour %v\n", i+1)
 		for i, s := range warehouse.PalletTrucks {
 			fmt.Println("%v %v [%v,%v]\n")
