@@ -79,6 +79,7 @@ func LastLineHandler(line string, warehouse *gameData.Warehouse) gameData.Storag
 	truck.Pos.X = x
 	truck.Pos.Y = y
 	truck.Capacity, _ = strconv.Atoi(data[2])
+	truck.Upturn, _ = strconv.Atoi(data[3])
 	return truck
 }
 
@@ -96,7 +97,6 @@ func ParcelHandler(line string, warehouse *gameData.Warehouse) gameData.Parcel {
 	weight := 0
 	var x, _ = strconv.Atoi(data[1])
 	var y, _ = strconv.Atoi(data[2])
-	fmt.Println(strings.ToUpper(data[3]))
 	if x < 0 || y < 0 {
 		os.Exit(0)
 	}
@@ -156,10 +156,12 @@ func ParsingHandler(line string, nb_lines int, count int, warehouse *gameData.Wa
 		warehouse.Truck = LastLineHandler(line, warehouse)
 		return
 	}
-	if strings.Contains(line, "transpalette") {
+	testLine := strings.Fields(line)
+	if len(testLine) == 3 {
 		warehouse.PalletTrucks = append(warehouse.PalletTrucks, PalletTruckHandler(line, warehouse))
 		return
-	} else {
+	}
+	if len(line) == 4 {
 		warehouse.Parcels = append(warehouse.Parcels, ParcelHandler(line, warehouse))
 		return
 	}
