@@ -2,10 +2,9 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
-
-	"encoding/json"
 
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
 	parser "github.com/LaurentColoma/M-BDX-002/parsing"
@@ -37,6 +36,14 @@ func main() {
 	for scanner2.Scan() {
 		count += 1
 		parser.ParsingHandler(scanner2.Text(), nb_lines, count, &warehouse)
+	}
+	if warehouse.Parcels == nil {
+		fmt.Println("😱\nError: No Parcel found")
+		os.Exit(0)
+	}
+	if warehouse.PalletTrucks == nil {
+		fmt.Println("😱\nError: No Pallet Truck found")
+		os.Exit(0)
 	}
 	file.Close()
 	wh, _ := json.MarshalIndent(warehouse, "", " ")

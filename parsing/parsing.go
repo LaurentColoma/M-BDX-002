@@ -33,7 +33,6 @@ func FirstLineHandler(line string, warehouse *gameData.Warehouse) {
 	match, _ := regexp.MatchString(`(\d+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
 		fmt.Println("😱\nError: format of Warehouse line is wrong")
-		fmt.Println(line)
 		os.Exit(0)
 	}
 
@@ -50,7 +49,6 @@ func FirstLineHandler(line string, warehouse *gameData.Warehouse) {
 		fmt.Println("😱\nError: number of turn is out of range")
 		os.Exit(0)
 	}
-
 	warehouse.Width = w
 	warehouse.Height = h
 	warehouse.NbTurn = n
@@ -61,7 +59,6 @@ func LastLineHandler(line string, warehouse *gameData.Warehouse) gameData.Storag
 	match, _ := regexp.MatchString(`(\d+)\s*(\d+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
 		fmt.Println("😱\nError: format of Truck line is wrong")
-		fmt.Println(line)
 		os.Exit(0)
 	}
 
@@ -70,9 +67,11 @@ func LastLineHandler(line string, warehouse *gameData.Warehouse) gameData.Storag
 	var x, _ = strconv.Atoi(data[0])
 	var y, _ = strconv.Atoi(data[1])
 	if warehouse.Width <= x || warehouse.Height <= y {
+		fmt.Println("😱\nError: Out of range")
 		os.Exit(0)
 	}
 	if x < 0 || y < 0 {
+		fmt.Println("😱\nError: Out of range")
 		os.Exit(0)
 	}
 	var truck gameData.Storage
@@ -88,7 +87,6 @@ func ParcelHandler(line string, warehouse *gameData.Warehouse) gameData.Parcel {
 	match, _ := regexp.MatchString(`(\w+)\s*(\d+)\s*(\d+)\s*(\w+)`, line)
 	if match == false {
 		fmt.Println("😱\nError: format of Parcel line is wrong")
-		fmt.Println(line)
 		os.Exit(0)
 	}
 
@@ -98,9 +96,11 @@ func ParcelHandler(line string, warehouse *gameData.Warehouse) gameData.Parcel {
 	var x, _ = strconv.Atoi(data[1])
 	var y, _ = strconv.Atoi(data[2])
 	if x < 0 || y < 0 {
+		fmt.Println("😱\nError: Out of range")
 		os.Exit(0)
 	}
 	if warehouse.Width <= x || warehouse.Height <= y {
+		fmt.Println("😱\nError: Out of range")
 		os.Exit(0)
 	}
 	if strings.ToUpper(data[3]) == "YELLOW" {
@@ -126,7 +126,6 @@ func PalletTruckHandler(line string, warehouse *gameData.Warehouse) gameData.Pal
 	match, _ := regexp.MatchString(`(\w+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
 		fmt.Println("😱\nError: format of Pallet Truck is wrong")
-		fmt.Println(line)
 		os.Exit(0)
 	}
 
@@ -135,9 +134,11 @@ func PalletTruckHandler(line string, warehouse *gameData.Warehouse) gameData.Pal
 	var x, _ = strconv.Atoi(data[1])
 	var y, _ = strconv.Atoi(data[2])
 	if x < 0 || y < 0 {
+		fmt.Println("😱\nError: Out of range")
 		os.Exit(0)
 	}
 	if warehouse.Width <= x || warehouse.Height <= y {
+		fmt.Println("😱\nError: Out of range")
 		os.Exit(0)
 	}
 	var palletTruck gameData.PalletTruck
