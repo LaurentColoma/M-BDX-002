@@ -4,12 +4,13 @@ import (
 	"fmt"
 )
 
-type position struct {
+type Position struct {
 	X int
 	Y int
 }
 
-func isAdjacent(pos1 position, pos2 position) bool {
+
+func isAdjacent(pos1 Position, pos2 Position) bool {
 	return ((pos1.X+1 == pos2.X && pos1.Y == pos2.Y) ||
 		(pos1.X-1 == pos2.X && pos1.Y == pos2.Y) ||
 		(pos1.X == pos2.X && pos1.Y+1 == pos2.Y) ||
@@ -17,14 +18,14 @@ func isAdjacent(pos1 position, pos2 position) bool {
 }
 
 type PalletTruck struct {
-	Pos    position
+	Pos    Position
 	Parcel Parcel
 	Name   string
 	Status int
 }
 
 type Storage struct {
-	Pos      position
+	Pos      Position
 	Name     string // by default "camion"
 	Capacity int
 	Status   int
@@ -33,7 +34,7 @@ type Storage struct {
 
 // Todo: move these struct in another file
 type Parcel struct {
-	Pos    position
+	Pos    Position
 	Name   string
 	Weight int
 }
@@ -56,29 +57,29 @@ const (
 	LEFT  = iota
 )
 
-// Check if a position is valid for a pallet truck
-func CheckPosition(pos position, wh *Warehouse) bool {
+// Check if a Position is valid for a pallet truck
+func CheckPosition(pos Position, wh *Warehouse) bool {
 	if pos.X >= wh.Width || pos.X < 0 || pos.Y >= wh.Height || pos.Y < 0 {
 		fmt.Println("Error: Cannot move outside of warehouse")
 		return false
 	}
 	for _, s := range wh.PalletTrucks {
 		if s.Pos.X == pos.X && s.Pos.Y == pos.Y {
-			fmt.Println("Error: An other pallet truck is on this position")
+			fmt.Println("Error: An other pallet truck is on this Position")
 			return false
 		}
 	}
 	for _, s := range wh.Parcels {
 		if s.Pos.X == pos.X && s.Pos.Y == pos.Y {
-			fmt.Println("Error: A parcel is on this position")
+			fmt.Println("Error: A parcel is on this Position")
 			return false
 		}
 	}
 	return true
 }
 
-// Return a new position that have applied the direction move
-func Move(pos position, direction MoveDirection) (newPos position) {
+// Return a new Position that have applied the direction move
+func Move(pos Position, direction MoveDirection) (newPos Position) {
 	newPos = pos
 	switch direction {
 	case UP:
@@ -93,7 +94,7 @@ func Move(pos position, direction MoveDirection) (newPos position) {
 	return
 }
 
-func ApplyPosition(pt *PalletTruck, pos position) {
+func ApplyPosition(pt *PalletTruck, pos Position) {
 	pt.Pos = pos
 }
 
