@@ -48,6 +48,10 @@ func main() {
 	file.Close()
 	wh, _ := json.MarshalIndent(warehouse, "", " ")
 	fmt.Println(string(wh))
-	//start game loop here
+	// if loop.GameLoop(warehouse) == 1 {
+	// 	println("smiley cool")
+	// } else {
+	// 	println("smiley")
+	// }
 	return
 }
