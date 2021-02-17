@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
+	loop "github.com/LaurentColoma/M-BDX-002/gameLoop"
 	parser "github.com/LaurentColoma/M-BDX-002/parsing"
 )
 
@@ -41,6 +42,10 @@ func main() {
 	file.Close()
 	wh, _ := json.MarshalIndent(warehouse, "", " ")
 	fmt.Println(string(wh))
-	//start game loop here
+	if loop.GameLoop(warehouse) == 1 {
+		println("smiley cool")
+	} else {
+		println("smiley")
+	}
 	return
 }
