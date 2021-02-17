@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"regexp"
-	"strings"
 	"strconv"
+	"strings"
 
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
 )
@@ -79,8 +79,6 @@ func LastLineHandler(line string, warehouse *gameData.Warehouse) gameData.Storag
 	truck.Pos.X = x
 	truck.Pos.Y = y
 	truck.Capacity, _ = strconv.Atoi(data[2])
-	// truck.availibility = data[3]
-
 	return truck
 }
 
@@ -95,23 +93,31 @@ func ParcelHandler(line string, warehouse *gameData.Warehouse) gameData.Parcel {
 
 	// Following lines are used to split the different string in the line
 	data := strings.Fields(line)
+	weight := 0
 	var x, _ = strconv.Atoi(data[1])
 	var y, _ = strconv.Atoi(data[2])
+	fmt.Println(strings.ToUpper(data[3]))
 	if x < 0 || y < 0 {
 		os.Exit(0)
 	}
 	if warehouse.Width <= x || warehouse.Height <= y {
 		os.Exit(0)
 	}
-	/* Ne pas decommenter
-	if data[3] != GREEN || data[3] != YELLOW || data[3] != BLUE {
+	if strings.ToUpper(data[3]) == "YELLOW" {
+		weight = 100
+	} else if strings.ToUpper(data[3]) == "GREEN" {
+		weight = 200
+	} else if strings.ToUpper(data[3]) == "BLUE" {
+		weight = 500
+	} else {
+		fmt.Println("Error: wrong color")
 		os.Exit(0)
-	}*/
+	}
 	var parcel gameData.Parcel
 	parcel.Name = data[0]
 	parcel.Pos.X = x
 	parcel.Pos.Y = y
-	parcel.Color = data[3]
+	parcel.Weight = weight
 	return parcel
 }
 
@@ -151,13 +157,9 @@ func ParsingHandler(line string, nb_lines int, count int, warehouse *gameData.Wa
 		return
 	}
 	if strings.Contains(line, "transpalette") {
-		//palletTruck *Palletruck
-		/*palletTruck.append(PalletTruckHandler(line))*/
 		warehouse.PalletTrucks = append(warehouse.PalletTrucks, PalletTruckHandler(line, warehouse))
 		return
 	} else {
-		// parcel *Parcel
-		/* parcel.append(ParcelHandler(line))*/
 		warehouse.Parcels = append(warehouse.Parcels, ParcelHandler(line, warehouse))
 		return
 	}

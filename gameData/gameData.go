@@ -32,9 +32,9 @@ type Storage struct {
 
 // Todo: move these struct in another file
 type Parcel struct {
-	Pos   position
-	Name  string
-	Color string
+	Pos    position
+	Name   string
+	Weight int
 }
 
 type Warehouse struct {

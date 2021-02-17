@@ -7,8 +7,8 @@ import (
 
 	"encoding/json"
 
-	parser "github.com/LaurentColoma/M-BDX-002/parsing"
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
+	parser "github.com/LaurentColoma/M-BDX-002/parsing"
 )
 
 func main() {
@@ -39,8 +39,7 @@ func main() {
 		parser.ParsingHandler(scanner2.Text(), nb_lines, count, &warehouse)
 	}
 	file.Close()
-	fmt.Println("parser done succesfully")
-	wh, _ := json.Marshal(warehouse)
+	wh, _ := json.MarshalIndent(warehouse, "", " ")
 	fmt.Println(string(wh))
 	//start game loop here
 	return
