@@ -153,12 +153,12 @@ func ParsingHandler(line string, nb_lines int, count int, warehouse *gameData.Wa
 	if strings.Contains(line, "transpalette") {
 		//palletTruck *Palletruck
 		/*palletTruck.append(PalletTruckHandler(line))*/
-		PalletTruckHandler(line, warehouse)
+		warehouse.PalletTrucks = append(warehouse.PalletTrucks, PalletTruckHandler(line, warehouse))
 		return
 	} else {
 		// parcel *Parcel
 		/* parcel.append(ParcelHandler(line))*/
-		ParcelHandler(line, warehouse)
+		warehouse.Parcels = append(warehouse.Parcels, ParcelHandler(line, warehouse))
 		return
 	}
 }
