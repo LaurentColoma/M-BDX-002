@@ -141,6 +141,6 @@ func TestParsingHandler(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(wh, expectedWarehouse) {
-		t.Errorf("Expected %v != %v", expectedWarehouse, wh)
+		t.Errorf("Expected %v got %v", expectedWarehouse, wh)
 	}
 }

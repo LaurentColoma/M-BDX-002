@@ -74,8 +74,10 @@ func MapFrom(wh *gameData.Warehouse, x int, y int) []int {
 func GetRoute(mapf []int, w int, h int, x int, y int) (res [][2]int) {
 	var c = mapf[y*w+x]
 
-	if c <= 0 {
+	if c <= 0 && c != -1 {
 		return nil
+	} else {
+		c = w * h // we just want a very big number
 	}
 
 	res = append(res, [2]int{x, y})

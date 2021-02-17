@@ -49,6 +49,14 @@ func getPossibleWarehouse() gameData.Warehouse {
 		 },
 		 {
 			Pos: gameData.Position{
+			 X: 2,
+			 Y: 0,
+			},
+			Name: "paquet2",
+			Weight: 500,
+		 },
+		 {
+			Pos: gameData.Position{
 			 X: 1,
 			 Y: 0,
 			},
@@ -147,7 +155,7 @@ func TestMapFrom(t *testing.T) {
 	var wh = getPossibleWarehouse()
 
 	var m = MapFrom(&wh, 1, 2)
-	var expectedM = []int{ 3, -1, 5, 4, 5, 2, 1, -1, 3, 4, 1, -2, 1, 2, 3, 2, 1, 2, 3, 4 }
+	var expectedM = []int{ 3, -1, -1, 4, 5, 2, 1, -1, 3, 4, 1, -2, 1, 2, 3, 2, 1, 2, 3, 4 }
 
 	if !reflect.DeepEqual(m, expectedM) {
 		t.Errorf("Expected %v got %v", expectedM, m)
