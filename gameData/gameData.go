@@ -22,6 +22,7 @@ type PalletTruck struct {
 	Parcel Parcel
 	Name   string
 	Status int
+	Path   [][2]int
 }
 
 type Storage struct {
@@ -107,6 +108,14 @@ func PeekParcel(pt *PalletTruck, wh *Warehouse, idx int) bool {
 	if isAdjacent(pt.Pos, wh.Parcels[idx].Pos) {
 		pt.Parcel = wh.Parcels[idx]
 		wh.Parcels = remove(wh.Parcels, idx)
+		return true
+	}
+	return false
+}
+
+func DropParcel(pt PalletTruck, wh Warehouse) bool {
+	if isAdjacent(pt.Pos, wh.Truck.Pos) {
+		pt.Parcel = Parcel{}
 		return true
 	}
 	return false
