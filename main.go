@@ -54,9 +54,9 @@ func main() {
 	var p = pathFinding.GetRoute(m, warehouse.Width, warehouse.Height, 2, 0)
 	fmt.Println(m, p)
 	// if loop.GameLoop(warehouse) == 1 {
-	// 	println("smiley cool")
+	// 	fmt.println("smiley cool")
 	// } else {
-	// 	println("smiley")
+	// 	fmt.println("smiley")
 	// }
 	return
 }
