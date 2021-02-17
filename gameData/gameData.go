@@ -31,7 +31,8 @@ type Storage struct {
 // Todo: move these struct in another file
 type Parcel struct {
 	Pos    position
-	Weight int
+	Name   string
+	Color  string
 }
 
 type Warehouse struct {
@@ -53,7 +54,7 @@ const (
 )
 
 // Check if a position is valid for a pallet truck
-func checkPosition(pos position, wh Warehouse) bool {
+func checkPosition(pos position, wh *Warehouse) bool {
 	if pos.X >= wh.Width || pos.X < 0 || pos.Y >= wh.Height || pos.Y < 0 {
 		fmt.Println("Error: Cannot move outside of warehouse")
 		return false

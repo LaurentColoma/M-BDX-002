@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"strconv"
 
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
 )
@@ -28,7 +29,7 @@ func OpenFileHandler(err error) bool {
 }
 
 // Check if the first line match with awaited format
-func FirstLineHandler(line string, warehouse gameData.Warehouse) gameData.Warehouse {
+func FirstLineHandler(line string, warehouse *gameData.Warehouse) {
 	match, _ := regexp.MatchString(`(\d+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
 		fmt.Println("😱\nError: format of Warehouse line is wrong")
@@ -37,24 +38,26 @@ func FirstLineHandler(line string, warehouse gameData.Warehouse) gameData.Wareho
 	}
 
 	//Following lines are used to split the different string in the line
-	data := strings.Fields(line)
-	if data[0] <= "0" || data[1] <= "0" {
+	var data = strings.Fields(line)
+	var w, _ = strconv.Atoi(data[0])
+	var h, _ = strconv.Atoi(data[1])
+	var n, _ = strconv.Atoi(data[2])
+	if w <= 0 || h <= 0 {
 		fmt.Println("😱\nError: warehouse cannot be null")
 		os.Exit(0)
 	}
-	if data[2] < "10" || data[2] > "100000" {
+	if n < 10 || n > 100000 {
 		fmt.Println("😱\nError: number of turn is out of range")
 		os.Exit(0)
 	}
 
-	warehouse.Width = data[0]
-	warehouse.Height = data[1]
-	warehouse.NbTurn = data[2]
-	return warehouse
+	warehouse.Width = w
+	warehouse.Height = h
+	warehouse.NbTurn = n
 }
 
 // Check if the last line match with awaited format
-func LastLineHandler(line string, warehouse gameData.Warehouse) gameData.Storage {
+func LastLineHandler(line string, warehouse *gameData.Warehouse) gameData.Storage {
 	match, _ := regexp.MatchString(`(\d+)\s*(\d+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
 		fmt.Println("😱\nError: format of Truck line is wrong")
@@ -63,24 +66,26 @@ func LastLineHandler(line string, warehouse gameData.Warehouse) gameData.Storage
 	}
 
 	//Following lines are used to split the different string in the line
-	data := strings.Fields(line)
-	if warehouse.Width < data[0] || warehouse.Height < data[1] {
+	var data = strings.Fields(line)
+	var x, _ = strconv.Atoi(data[0])
+	var y, _ = strconv.Atoi(data[1])
+	if warehouse.Width <= x || warehouse.Height <= y {
 		os.Exit(0)
 	}
-	if data[0] < 0 || data[1] < 0 {
+	if x < 0 || y < 0 {
 		os.Exit(0)
 	}
 	var truck gameData.Storage
-	truck.Pos.X = data[0]
-	truck.Pos.Y = data[1]
-	truck.Capacity = data[2]
+	truck.Pos.X = x
+	truck.Pos.Y = y
+	truck.Capacity, _ = strconv.Atoi(data[2])
 	// truck.availibility = data[3]
 
 	return truck
 }
 
 // Check if parcel line match with awaited format
-func ParcelHandler(line string, warehouse gameData.Warehouse) gameData.Parcel {
+func ParcelHandler(line string, warehouse *gameData.Warehouse) gameData.Parcel {
 	match, _ := regexp.MatchString(`(\w+)\s*(\d+)\s*(\d+)\s*(\w+)`, line)
 	if match == false {
 		fmt.Println("😱\nError: format of Parcel line is wrong")
@@ -90,27 +95,28 @@ func ParcelHandler(line string, warehouse gameData.Warehouse) gameData.Parcel {
 
 	// Following lines are used to split the different string in the line
 	data := strings.Fields(line)
-	if data[1] < 0 || data[2] < 0 {
+	var x, _ = strconv.Atoi(data[1])
+	var y, _ = strconv.Atoi(data[2])
+	if x < 0 || y < 0 {
 		os.Exit(0)
 	}
-	if warehouse.Width < data[1] || warehouse.Height < data[2] {
+	if warehouse.Width <= x || warehouse.Height <= y {
 		os.Exit(0)
 	}
 	/* Ne pas decommenter
 	if data[3] != GREEN || data[3] != YELLOW || data[3] != BLUE {
 		os.Exit(0)
 	}*/
-	/*var parcel Parcel
-	parcel.name := data[Ø]
-	parcel.pos.x := data[1]
-	parcel.pos.y := data[2]
-	parcel.color := data[3]
+	var parcel gameData.Parcel
+	parcel.Name = data[0]
+	parcel.Pos.X = x
+	parcel.Pos.Y = y
+	parcel.Color = data[3]
 	return parcel
-	*/
 }
 
 // Check if pallettruck line match with awaited format
-func PalletTruckHandler(line string, warehouse gameData.Warehouse) gameData.PalletTruck {
+func PalletTruckHandler(line string, warehouse *gameData.Warehouse) gameData.PalletTruck {
 	match, _ := regexp.MatchString(`(\w+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
 		fmt.Println("😱\nError: format of Pallet Truck is wrong")
@@ -120,37 +126,39 @@ func PalletTruckHandler(line string, warehouse gameData.Warehouse) gameData.Pall
 
 	// Following lines are used to split the different string in the line
 	data := strings.Fields(line)
-	if data[1] < 0 || data[2] < 0 {
+	var x, _ = strconv.Atoi(data[1])
+	var y, _ = strconv.Atoi(data[2])
+	if x < 0 || y < 0 {
 		os.Exit(0)
 	}
-	if warehouse.Width < data[1] || warehouse.Height < data[2] {
+	if warehouse.Width <= x || warehouse.Height <= y {
 		os.Exit(0)
 	}
 	var palletTruck gameData.PalletTruck
 	palletTruck.Name = data[0]
-	palletTruck.Pos.X = data[1]
-	palletTruck.Pos.Y = data[2]
+	palletTruck.Pos.X = x
+	palletTruck.Pos.Y = y
 	return palletTruck
 }
 
-func ParsingHandler(line string, nb_lines int, count int) {
+func ParsingHandler(line string, nb_lines int, count int, warehouse *gameData.Warehouse) {
 	if count == 1 {
-		warehouse := FirstLineHandler(line)
+		FirstLineHandler(line, warehouse)
 		return
 	}
 	if count == nb_lines {
-		truck := LastLineHandler(line)
+		warehouse.Truck = LastLineHandler(line, warehouse)
 		return
 	}
 	if strings.Contains(line, "transpalette") {
 		//palletTruck *Palletruck
 		/*palletTruck.append(PalletTruckHandler(line))*/
-		PalletTruckHandler(line)
+		PalletTruckHandler(line, warehouse)
 		return
 	} else {
 		// parcel *Parcel
 		/* parcel.append(ParcelHandler(line))*/
-		ParcelHandler(line)
+		ParcelHandler(line, warehouse)
 		return
 	}
 }

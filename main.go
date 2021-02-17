@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"os"
 
+	"encoding/json"
+
 	parser "github.com/LaurentColoma/M-BDX-002/parsing"
+	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
 )
 
 func main() {
@@ -30,12 +33,15 @@ func main() {
 	}
 	count := 0
 	scanner2 := bufio.NewScanner(file)
+	var warehouse gameData.Warehouse
 	for scanner2.Scan() {
 		count += 1
-		parser.ParsingHandler(scanner2.Text(), nb_lines, count)
+		parser.ParsingHandler(scanner2.Text(), nb_lines, count, &warehouse)
 	}
 	file.Close()
 	fmt.Println("parser done succesfully")
+	wh, _ := json.Marshal(warehouse)
+	fmt.Println(string(wh))
 	//start game loop here
 	return
 }
