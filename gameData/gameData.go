@@ -28,6 +28,7 @@ type Storage struct {
 	Name     string // by default "camion"
 	Capacity int
 	Status   int
+	Upturn   int
 }
 
 // Todo: move these struct in another file
