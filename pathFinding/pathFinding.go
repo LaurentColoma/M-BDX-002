@@ -55,6 +55,9 @@ func MapFrom(wh *gameData.Warehouse, x int, y int) []int {
 	for _, s := range wh.Parcels {
 		mapf[s.Pos.Y*wh.Width+s.Pos.X] = -1
 	}
+	if wh.Truck.Status == 3 {
+		mapf[wh.Truck.Pos.Y*wh.Width+wh.Truck.Pos.X] = -1
+	}
 
 	mapf[y*wh.Width+x] = -2
 
@@ -72,13 +75,14 @@ func GetRoute(mapf []int, w int, h int, x int, y int) (res [][2]int) {
 	var c = mapf[y*w+x]
 
 	if c <= 0 {
-		return
+		return nil
 	}
 
 	res = append(res, [2]int{x, y})
 
 	for c != -2 {
 		var pointsAround = [4][2]int{{x + 1, y}, {x - 1, y}, {x, y + 1}, {x, y - 1}}
+		var locked = true
 
 		for _, pa := range pointsAround {
 			var paX = pa[0]
@@ -91,12 +95,17 @@ func GetRoute(mapf []int, w int, h int, x int, y int) (res [][2]int) {
 					c = mapf[paY*w+paX]
 					y = paY
 					x = paX
+					locked = false
 					if c > 0 {
 						res = append([][2]int{{x, y}}, res...)
 					}
 					break
 				}
 			}
+		}
+
+		if locked {
+			return nil
 		}
 	}
 	return

@@ -50,8 +50,8 @@ func main() {
 	wh, _ := json.MarshalIndent(warehouse, "", " ")
 	fmt.Println(string(wh))
 	//start game loop here
-	var m = pathFinding.MapFrom(&warehouse, 1, 1)
-	var p = pathFinding.GetRoute(m, warehouse.Width, warehouse.Height, 3, 3)
+	var m = pathFinding.MapFrom(&warehouse, 1, 2)
+	var p = pathFinding.GetRoute(m, warehouse.Width, warehouse.Height, 2, 0)
 	fmt.Println(m, p)
 	// if loop.GameLoop(warehouse) == 1 {
 	// 	fmt.println("smiley cool")
