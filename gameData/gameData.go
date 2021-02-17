@@ -20,19 +20,21 @@ type PalletTruck struct {
 	Pos    position
 	Parcel Parcel
 	Name   string
+	Status int
 }
 
 type Storage struct {
 	Pos      position
 	Name     string // by default "camion"
 	Capacity int
+	Status   int
 }
 
 // Todo: move these struct in another file
 type Parcel struct {
-	Pos    position
-	Name   string
-	Color  string
+	Pos   position
+	Name  string
+	Color string
 }
 
 type Warehouse struct {
@@ -67,7 +69,7 @@ func checkPosition(pos position, wh *Warehouse) bool {
 	}
 	for _, s := range wh.Parcels {
 		if s.Pos.X == pos.X && s.Pos.Y == pos.Y {
-			fmt.Println("Error: A pacel is on this position")
+			fmt.Println("Error: A parcel is on this position")
 			return false
 		}
 	}

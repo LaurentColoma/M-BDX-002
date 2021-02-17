@@ -6,11 +6,19 @@ import (
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
 )
 
-func gameLoop(warehouse gameData.Warehouse) {
-	for i := 0; i < warehouse.nbTurn; i++ {
+func gameLoop(warehouse gameData.Warehouse)  {
+	state := [...]string{"GO", "WAIT", "TAKE", "LEAVE", "GONE", "WAITING"}
+
+	gameData.Warehouse.Truck.Status = 5
+	for i := range warehouse.PalletTrucks {
+		gameData.Warehouse.PalletTrucks[i].Status = 1
+	}
+	for i := 0; i < warehouse.NbTurn; i++ {
 		fmt.Printf("tour %v\n", i+1)
-		for i, s := range warehouse.PalletTrucks {
-			fmt.Println("%v %v [%v,%v]\n")
+
+		for i := range warehouse.PalletTrucks {
+			fmt.Printf("%v %v [%v,%v]\n", warehouse.PalletTrucks[i].Name,
+			state[], warwarehouse.PalletTrucks[i].Pos.X, warwarehouse.PalletTrucks[i].Pos.X)
 		}
 	}
 
