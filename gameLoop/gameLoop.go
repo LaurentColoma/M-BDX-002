@@ -9,19 +9,17 @@ import (
 	"github.com/LaurentColoma/M-BDX-002/pathFinding"
 )
 
-func miniParcel(warehouse gameData.Warehouse) (mini int, index int) {
+func miniParcel(warehouse gameData.Warehouse) (mini int) {
 	minim := 501
-	index = 0
 	for i := range warehouse.Parcels {
 		if warehouse.Parcels[i].Weight < minim {
 			minim = warehouse.Parcels[i].Weight
-			index = i
 			if minim == 100 {
-				return minim, index
+				return minim
 			}
 		}
 	}
-	return minim, index
+	return minim
 }
 
 func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
@@ -57,7 +55,7 @@ func GameLoop(warehouse gameData.Warehouse) int {
 		if len(warehouse.Parcels) == 0 {
 			return 1
 		}
-		minim, index := miniParcel(warehouse)
+		minim := miniParcel(warehouse)
 		if truckLeft == false && warehouse.Truck.Capacity-currentLoad < minim {
 			warehouse.Truck.Status = 4
 			waitBeforeComing = warehouse.Truck.Upturn
