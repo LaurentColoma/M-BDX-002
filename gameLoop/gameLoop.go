@@ -76,6 +76,9 @@ func GameLoop(warehouse gameData.Warehouse) int {
 
 		for i := range warehouse.PalletTrucks {
 			// we drop the parcel into truck
+			if warehouse.PalletTrucks[i].Parcel.Weight == 0 {
+				giveParcel(&warehouse.PalletTrucks[i], &warehouse)
+			}
 			if truckLeft == false && warehouse.PalletTrucks[i].Parcel.Weight > 1 && gameData.DropParcel(warehouse.PalletTrucks[i], warehouse) == true {
 				currentLoad += warehouse.PalletTrucks[i].Parcel.Weight
 				warehouse.PalletTrucks[i].Status = 2
@@ -83,8 +86,6 @@ func GameLoop(warehouse gameData.Warehouse) int {
 				warehouse.PalletTrucks[i].Status = 1
 				warehouse.PalletTrucks[i].Parcel.Pos.X = warehouse.Truck.Pos.X
 				warehouse.PalletTrucks[i].Parcel.Pos.Y = warehouse.Truck.Pos.Y
-			} else if warehouse.PalletTrucks[i].Parcel.Weight == 0 {
-				giveParcel(&warehouse.PalletTrucks[i], &warehouse)
 			}
 			if warehouse.PalletTrucks[i].Status != 1 && warehouse.PalletTrucks[i].Status != 2 {
 				m := pathFinding.MapFrom(&warehouse, warehouse.PalletTrucks[i].Pos.X, warehouse.PalletTrucks[i].Pos.Y)
