@@ -126,7 +126,7 @@ func GameLoop(warehouse gameData.Warehouse) int {
 					warehouse.PalletTrucks[i].Pos.X,
 					warehouse.PalletTrucks[i].Pos.X)
 			}
-		} // le camion fait bipbip le batard
+		}
 		fmt.Printf("camion %v %v %v\n\n", state[warehouse.Truck.Status], warehouse.Truck.Capacity, currentLoad)
 	}
 	return 0
