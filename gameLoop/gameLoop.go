@@ -100,7 +100,7 @@ func GameLoop(warehouse gameData.Warehouse) int {
 				case "-10":
 					warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.LEFT)
 				case "0-1":
-					warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.DOWN)
+					warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.UP)
 				}
 				warehouse.PalletTrucks[i].Status = 5
 			}
