@@ -118,7 +118,7 @@ func GameLoop(warehouse gameData.Warehouse) int {
 				fmt.Printf("%v %v [%v,%v]\n", warehouse.PalletTrucks[i].Name,
 					state[warehouse.PalletTrucks[i].Status],
 					warehouse.PalletTrucks[i].Pos.X,
-					warehouse.PalletTrucks[i].Pos.X)
+					warehouse.PalletTrucks[i].Pos.Y)
 			} else {
 				fmt.Printf("%v %v\n", warehouse.PalletTrucks[i].Name,
 					state[warehouse.PalletTrucks[i].Status])
