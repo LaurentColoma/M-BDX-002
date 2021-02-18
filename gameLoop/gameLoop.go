@@ -37,6 +37,7 @@ func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
 	}
 	pt.Parcel.Pos.X = wh.Parcels[index].Pos.X
 	pt.Parcel.Pos.Y = wh.Parcels[index].Pos.Y
+	pt.Index = index
 	wh.Parcels[index].Aimed = true
 	pt.Parcel.Weight = 1
 }
@@ -80,7 +81,7 @@ func GameLoop(warehouse gameData.Warehouse) int {
 			if truckLeft == false && warehouse.PalletTrucks[i].Parcel.Weight > 1 && gameData.DropParcel(warehouse.PalletTrucks[i], warehouse) == true {
 				currentLoad += warehouse.PalletTrucks[i].Parcel.Weight
 				warehouse.PalletTrucks[i].Status = 2
-			} else if warehouse.PalletTrucks[i].Parcel.Weight == 1 && gameData.PeekParcel(&warehouse.PalletTrucks[i], &warehouse, index) == true {
+			} else if warehouse.PalletTrucks[i].Parcel.Weight == 1 && gameData.PeekParcel(&warehouse.PalletTrucks[i], &warehouse, warehouse.PalletTrucks[i].Index) == true {
 				warehouse.PalletTrucks[i].Status = 1
 			} else if warehouse.PalletTrucks[i].Parcel.Weight == 0 {
 				giveParcel(&warehouse.PalletTrucks[i], &warehouse)

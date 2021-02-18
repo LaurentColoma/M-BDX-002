@@ -21,6 +21,7 @@ type PalletTruck struct {
 	Parcel Parcel
 	Name   string
 	Status int
+	Index  int
 	Path   [][2]int
 }
 
