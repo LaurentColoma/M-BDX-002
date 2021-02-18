@@ -26,7 +26,6 @@ type PalletTruck struct {
 
 type Storage struct {
 	Pos      position
-	Name     string // by default "camion"
 	Capacity int
 	Status   int
 	Upturn   int
@@ -37,6 +36,7 @@ type Parcel struct {
 	Pos    position
 	Name   string
 	Weight int
+	Aimed  bool
 }
 
 type Warehouse struct {

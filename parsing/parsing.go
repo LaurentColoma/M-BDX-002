@@ -118,6 +118,7 @@ func ParcelHandler(line string, warehouse *gameData.Warehouse) gameData.Parcel {
 	parcel.Pos.X = x
 	parcel.Pos.Y = y
 	parcel.Weight = weight
+	parcel.Aimed = false
 	return parcel
 }
 

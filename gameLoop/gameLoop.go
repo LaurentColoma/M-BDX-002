@@ -2,6 +2,7 @@ package gameLoop
 
 import (
 	"fmt"
+	"math"
 	"sort"
 	"strconv"
 
@@ -17,11 +18,35 @@ func miniParcel(warehouse gameData.Warehouse) (mini int, index int) {
 			minim = warehouse.Parcels[i].Weight
 			index = i
 			if minim == 100 {
-				return minim, index //, parcels[i].Pos.X, parcels[i].Pos.Y
+				return minim, index
 			}
 		}
 	}
 	return minim, index
+}
+
+func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
+	m := PathFinding.MapFrom(wh, pt.Pos.X, pt.Pos.Y)
+	var paths [][2]int
+	var p [][2]int
+
+	for i := range wh.Parcels {
+		p = PathFinding.GetRoute(m, wh.Width, wh.Height, wh.Parcels[i].Pos.X, wh.Parcels[i].Pos.Y)
+		paths[i] = p[len(paths)-1]
+	}
+	lowest := math.Abs(float64(paths[0][0])-float64(pt.Pos.X)) +
+		math.Abs(float64(paths[0][1])-float64(pt.Pos.Y))
+	index := 0
+	for j := range paths {
+		if lowest > math.Abs(float64(paths[j][0])-float64(pt.Pos.X))+
+			math.Abs(float64(paths[j][1])-float64(pt.Pos.Y)) && wh.Parcels[j].Aimed == false {
+			index = j
+		}
+	}
+	pt.Parcel.Pos.X = wh.Parcels[index].Pos.X
+	pt.Parcel.Pos.Y = wh.Parcels[index].Pos.Y
+	wh.Parcels[index].Aimed = true
+	pt.Parcel.Weight = 1
 }
 
 func GameLoop(warehouse gameData.Warehouse) int {
@@ -53,25 +78,20 @@ func GameLoop(warehouse gameData.Warehouse) int {
 		if waitBeforeComing == 0 && truckLeft == true {
 			truckLeft = false
 			currentLoad = 0
+			warehouse.Truck.Status = sort.SearchStrings(state, "WAITING")
 		} else if truckLeft == true && waitBeforeComing > 0 {
 			waitBeforeComing--
 		}
 
 		for i := range warehouse.PalletTrucks {
 			// we drop the parcel into truck
-			if truckLeft == false && warehouse.PalletTrucks[i].Parcel.Weight != 0 && gameData.DropParcel(warehouse.PalletTrucks[i], warehouse) == true {
+			if truckLeft == false && warehouse.PalletTrucks[i].Parcel.Weight > 1 && gameData.DropParcel(warehouse.PalletTrucks[i], warehouse) == true {
 				currentLoad += warehouse.PalletTrucks[i].Parcel.Weight
 				warehouse.PalletTrucks[i].Status = sort.SearchStrings(state, "LEAVE")
-			}
-			// taking a parcel if one is adjacent
-			if warehouse.PalletTrucks[i].Parcel.Weight == 0 && gameData.PeekParcel(&warehouse.PalletTrucks[i], &warehouse, index) == true {
+			} else if warehouse.PalletTrucks[i].Parcel.Weight == 1 && gameData.PeekParcel(&warehouse.PalletTrucks[i], &warehouse, index) == true {
 				warehouse.PalletTrucks[i].Status = sort.SearchStrings(state, "TAKE")
-			}
-			// each palletTruck looking for a parcel if nothing in sight yet
-			if warehouse.PalletTrucks[i].Parcel.Weight == 0 {
-				//warehouse.PalletTrucks[i].Parcel.Weight =
-				m := PathFinding.MapFrom(&warehouse, warehouse.PalletTrucks[i].Pos.X, warehouse.PalletTrucks[i].Pos.Y)
-				warehouse.PalletTrucks[i].Path = PathFinding.GetRoute(m, warehouse.Width, warehouse.Height, warehouse.PalletTrucks[i].Parcel.Pos.X, warehouse.PalletTrucks[i].Parcel.Pos.Y)
+			} else if warehouse.PalletTrucks[i].Parcel.Weight == 0 {
+				giveParcel(&warehouse.PalletTrucks[i], &warehouse)
 			}
 			if warehouse.PalletTrucks[i].Status != sort.SearchStrings(state, "TAKE") && warehouse.PalletTrucks[i].Status != sort.SearchStrings(state, "LEAVE") {
 				x := warehouse.PalletTrucks[i].Path[0][0] - warehouse.PalletTrucks[i].Pos.X
@@ -87,6 +107,7 @@ func GameLoop(warehouse gameData.Warehouse) int {
 				case "0-1":
 					warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.DOWN)
 				}
+				warehouse.PalletTrucks[i].Status = sort.SearchStrings(state, "GO")
 			}
 			if warehouse.PalletTrucks[i].Status == sort.SearchStrings(state, "TAKE") ||
 				warehouse.PalletTrucks[i].Status == sort.SearchStrings(state, "LEAVE") {

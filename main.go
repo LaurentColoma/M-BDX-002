@@ -7,6 +7,7 @@ import (
 	"os"
 
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
+	Loop "github.com/LaurentColoma/M-BDX-002/gameLoop"
 	parser "github.com/LaurentColoma/M-BDX-002/parsing"
 	pathFinding "github.com/LaurentColoma/M-BDX-002/pathFinding"
 )
@@ -53,10 +54,10 @@ func main() {
 	var m = pathFinding.MapFrom(&warehouse, 1, 2)
 	var p = pathFinding.GetRoute(m, warehouse.Width, warehouse.Height, 2, 0)
 	fmt.Println(m, p)
-	// if loop.GameLoop(warehouse) == 1 {
-	// 	fmt.println("smiley cool")
-	// } else {
-	// 	fmt.println("smiley")
-	// }
+	if Loop.GameLoop(warehouse) == 1 {
+		fmt.Println("smiley cool")
+	} else {
+		fmt.Println("smiley")
+	}
 	return
 }
