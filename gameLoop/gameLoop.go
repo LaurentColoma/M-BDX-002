@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
-	PathFinding "github.com/LaurentColoma/M-BDX-002/pathFinding"
+	pathFinding "github.com/LaurentColoma/M-BDX-002/pathFinding"
 )
 
 func miniParcel(warehouse gameData.Warehouse) (mini int, index int) {
@@ -26,13 +26,21 @@ func miniParcel(warehouse gameData.Warehouse) (mini int, index int) {
 }
 
 func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
-	lowest := math.Abs(float64(wh.Parcels[0].Pos.X)-float64(pt.Pos.X)) +
-		math.Abs(float64(wh.Parcels[0].Pos.Y)-float64(pt.Pos.Y))
-	index := 0
+	m := pathFinding.MapFrom(wh, pt.Pos.X, pt.Pos.Y)
+	var paths [][2]int
+	var p [][2]int
+
 	for i := range wh.Parcels {
-		if lowest > math.Abs(float64(wh.Parcels[i].Pos.X)-float64(pt.Pos.X))+
-			math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y)) && wh.Parcels[j].Aimed == false {
-			index = i
+		p = pathFinding.GetRoute(m, wh.Width, wh.Height, wh.Parcels[i].Pos.X, wh.Parcels[i].Pos.Y)
+		paths[i] = p[len(paths)-1]
+	}
+	lowest := math.Abs(float64(paths[0][0])-float64(pt.Pos.X)) +
+		math.Abs(float64(paths[0][1])-float64(pt.Pos.Y))
+	index := 0
+	for j := range paths {
+		if lowest > math.Abs(float64(paths[j][0])-float64(pt.Pos.X))+
+			math.Abs(float64(paths[j][1])-float64(pt.Pos.Y)) && wh.Parcels[j].Aimed == false {
+			index = j
 		}
 	}
 	pt.Parcel.Pos.X = wh.Parcels[index].Pos.X
