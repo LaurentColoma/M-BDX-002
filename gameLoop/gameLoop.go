@@ -24,13 +24,26 @@ func miniParcel(warehouse gameData.Warehouse) (mini int) {
 
 func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
 	var index int
-	lowest := math.Abs(float64(wh.Parcels[0].Pos.X)-float64(pt.Pos.X)) +
-		math.Abs(float64(wh.Parcels[0].Pos.Y)-float64(pt.Pos.Y))
+	var lowest float64
+	// lowest := math.Abs(float64(wh.Parcels[0].Pos.X)-float64(pt.Pos.X)) +
+	// 	math.Abs(float64(wh.Parcels[0].Pos.Y)-float64(pt.Pos.Y))
+	for i := range wh.Parcels {
+		if lowest < math.Abs(float64(wh.Parcels[i].Pos.X)-float64(pt.Pos.X))+
+			math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y)) &&
+			wh.Parcels[i].Aimed == false && wh.Parcels[i].Dead == false {
+			index = i
+			lowest = math.Abs(float64(wh.Parcels[i].Pos.X)-float64(pt.Pos.X)) +
+				math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y))
+		}
+	}
 
 	for i := range wh.Parcels {
 		if lowest > math.Abs(float64(wh.Parcels[i].Pos.X)-float64(pt.Pos.X))+
-			math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y)) && wh.Parcels[i].Aimed == false {
+			math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y)) &&
+			wh.Parcels[i].Aimed == false && wh.Parcels[i].Dead == false {
 			index = i
+			lowest = math.Abs(float64(wh.Parcels[i].Pos.X)-float64(pt.Pos.X)) +
+				math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y))
 		}
 	}
 	pt.Parcel.Pos.X = wh.Parcels[index].Pos.X
@@ -52,10 +65,13 @@ func GameLoop(warehouse gameData.Warehouse) int {
 		warehouse.PalletTrucks[i].Status = 0
 	}
 	for i := 0; i < warehouse.NbTurn; i++ {
+		minim := miniParcel(warehouse)
+		if warehouse.Truck.Capacity < minim {
+			return -1
+		}
 		if len(warehouse.Parcels) == 0 {
 			return 1
 		}
-		minim := miniParcel(warehouse)
 		if truckLeft == false && warehouse.Truck.Capacity-currentLoad < minim {
 			warehouse.Truck.Status = 4
 			waitBeforeComing = warehouse.Truck.Upturn
@@ -107,10 +123,8 @@ func GameLoop(warehouse gameData.Warehouse) int {
 			}
 			if warehouse.PalletTrucks[i].Status == 1 ||
 				warehouse.PalletTrucks[i].Status == 2 {
-				fmt.Printf("%v %v [%v,%v] %v %v\n", warehouse.PalletTrucks[i].Name,
+				fmt.Printf("%v %v %v %v\n", warehouse.PalletTrucks[i].Name,
 					state[warehouse.PalletTrucks[i].Status],
-					warehouse.PalletTrucks[i].Pos.X,
-					warehouse.PalletTrucks[i].Pos.Y,
 					warehouse.PalletTrucks[i].Parcel.Name,
 					weight[warehouse.PalletTrucks[i].Parcel.Weight/100-1])
 				if warehouse.PalletTrucks[i].Status == 2 {

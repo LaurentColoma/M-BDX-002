@@ -1,7 +1,7 @@
-5 5 10
+5 5 40
 colis_a_livrer 2 1 green
 paquet 2 2 BLUE
 deadpool 0 3 yellow
 colere_DU_dragon 4 1 green
 transpalette_1 0 0
-3 4 4 5
+3 4 700 5
