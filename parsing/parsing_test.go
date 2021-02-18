@@ -68,7 +68,6 @@ var expectedWarehouse = gameData.Warehouse{
 			X: 3,
 			Y: 4,
 		},
-		Name:     "",
 		Capacity: 4,
 		Status:   0,
 		Upturn:   5,
