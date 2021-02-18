@@ -37,6 +37,7 @@ type Parcel struct {
 	Name   string
 	Weight int
 	Aimed  bool
+	Dead   bool
 }
 
 type Warehouse struct {
@@ -106,7 +107,8 @@ func remove(s []Parcel, i int) []Parcel {
 func PeekParcel(pt *PalletTruck, wh *Warehouse, idx int) bool {
 	if isAdjacent(pt.Pos, wh.Parcels[idx].Pos) {
 		pt.Parcel = wh.Parcels[idx]
-		wh.Parcels = remove(wh.Parcels, idx)
+		wh.Parcels[idx] = Parcel{Dead: true}
+		//wh.Parcels = remove(wh.Parcels, idx)
 		return true
 	}
 	return false
@@ -114,7 +116,6 @@ func PeekParcel(pt *PalletTruck, wh *Warehouse, idx int) bool {
 
 func DropParcel(pt PalletTruck, wh Warehouse) bool {
 	if isAdjacent(pt.Pos, wh.Truck.Pos) {
-		pt.Parcel = Parcel{}
 		return true
 	}
 	return false
