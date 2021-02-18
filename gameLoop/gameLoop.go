@@ -3,7 +3,6 @@ package gameLoop
 import (
 	"fmt"
 	"math"
-	"sort"
 	"strconv"
 
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
@@ -30,7 +29,7 @@ func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
 	index := 0
 	for i := range wh.Parcels {
 		if lowest > math.Abs(float64(wh.Parcels[i].Pos.X)-float64(pt.Pos.X))+
-			math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y)) && wh.Parcels[j].Aimed == false {
+			math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y)) && wh.Parcels[i].Aimed == false {
 			index = i
 		}
 	}
@@ -41,15 +40,15 @@ func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
 }
 
 func GameLoop(warehouse gameData.Warehouse) int {
-	state := []string{"WAIT", "TAKE", "LEAVE", "WAITING", "GONE"}
+	state := []string{"WAIT", "TAKE", "LEAVE", "WAITING", "GONE", "GO"}
 	weight := []string{"YELLOW", "GREEN", "EMPTY", "EMPTY", "BLUE"}
 	currentLoad := 0
 	waitBeforeComing := 0
 	truckLeft := false
 
-	warehouse.Truck.Status = sort.SearchStrings(state, "WAITING")
+	warehouse.Truck.Status = 3
 	for i := range warehouse.PalletTrucks {
-		warehouse.PalletTrucks[i].Status = sort.SearchStrings(state, "WAIT")
+		warehouse.PalletTrucks[i].Status = 0
 	}
 	for i := 0; i < warehouse.NbTurn; i++ {
 		if len(warehouse.Parcels) == 0 {
@@ -57,19 +56,19 @@ func GameLoop(warehouse gameData.Warehouse) int {
 		}
 		minim, index := miniParcel(warehouse)
 		if truckLeft == false && warehouse.Truck.Capacity-currentLoad < minim {
-			warehouse.Truck.Status = sort.SearchStrings(state, "GONE")
+			warehouse.Truck.Status = 4
 			waitBeforeComing = warehouse.Truck.Upturn
 			truckLeft = true
 		}
 		for i := range warehouse.PalletTrucks {
-			warehouse.PalletTrucks[i].Status = sort.SearchStrings(state, "WAIT")
+			warehouse.PalletTrucks[i].Status = 0
 		}
 		fmt.Printf("tour %v\n", i+1)
 
 		if waitBeforeComing == 0 && truckLeft == true {
 			truckLeft = false
 			currentLoad = 0
-			warehouse.Truck.Status = sort.SearchStrings(state, "WAITING")
+			warehouse.Truck.Status = 3
 		} else if truckLeft == true && waitBeforeComing > 0 {
 			waitBeforeComing--
 		}
@@ -78,13 +77,13 @@ func GameLoop(warehouse gameData.Warehouse) int {
 			// we drop the parcel into truck
 			if truckLeft == false && warehouse.PalletTrucks[i].Parcel.Weight > 1 && gameData.DropParcel(warehouse.PalletTrucks[i], warehouse) == true {
 				currentLoad += warehouse.PalletTrucks[i].Parcel.Weight
-				warehouse.PalletTrucks[i].Status = sort.SearchStrings(state, "LEAVE")
+				warehouse.PalletTrucks[i].Status = 2
 			} else if warehouse.PalletTrucks[i].Parcel.Weight == 1 && gameData.PeekParcel(&warehouse.PalletTrucks[i], &warehouse, index) == true {
-				warehouse.PalletTrucks[i].Status = sort.SearchStrings(state, "TAKE")
+				warehouse.PalletTrucks[i].Status = 1
 			} else if warehouse.PalletTrucks[i].Parcel.Weight == 0 {
 				giveParcel(&warehouse.PalletTrucks[i], &warehouse)
 			}
-			if warehouse.PalletTrucks[i].Status != sort.SearchStrings(state, "TAKE") && warehouse.PalletTrucks[i].Status != sort.SearchStrings(state, "LEAVE") {
+			if warehouse.PalletTrucks[i].Status != 1 && warehouse.PalletTrucks[i].Status != 2 {
 				x := warehouse.PalletTrucks[i].Path[0][0] - warehouse.PalletTrucks[i].Pos.X
 				y := warehouse.PalletTrucks[i].Path[0][1] - warehouse.PalletTrucks[i].Pos.Y
 				res := strconv.Itoa(x) + strconv.Itoa(y)
@@ -98,24 +97,27 @@ func GameLoop(warehouse gameData.Warehouse) int {
 				case "0-1":
 					warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.DOWN)
 				}
-				warehouse.PalletTrucks[i].Status = sort.SearchStrings(state, "GO")
+				warehouse.PalletTrucks[i].Status = 5
 			}
-			if warehouse.PalletTrucks[i].Status == sort.SearchStrings(state, "TAKE") ||
-				warehouse.PalletTrucks[i].Status == sort.SearchStrings(state, "LEAVE") {
+			if warehouse.PalletTrucks[i].Status == 1 ||
+				warehouse.PalletTrucks[i].Status == 2 {
 				fmt.Printf("%v %v [%v,%v] %v %v\n", warehouse.PalletTrucks[i].Name,
 					state[warehouse.PalletTrucks[i].Status],
 					warehouse.PalletTrucks[i].Pos.X,
 					warehouse.PalletTrucks[i].Pos.X,
 					warehouse.PalletTrucks[i].Parcel.Name,
 					weight[warehouse.PalletTrucks[i].Parcel.Weight/100+1])
-				if warehouse.PalletTrucks[i].Status == sort.SearchStrings(state, "LEAVE") {
+				if warehouse.PalletTrucks[i].Status == 2 {
 					warehouse.PalletTrucks[i].Parcel = gameData.Parcel{}
 				}
-			} else {
+			} else if warehouse.PalletTrucks[i].Status == 5 {
 				fmt.Printf("%v %v [%v,%v]\n", warehouse.PalletTrucks[i].Name,
 					state[warehouse.PalletTrucks[i].Status],
 					warehouse.PalletTrucks[i].Pos.X,
 					warehouse.PalletTrucks[i].Pos.X)
+			} else {
+				fmt.Printf("%v %v\n", warehouse.PalletTrucks[i].Name,
+					state[warehouse.PalletTrucks[i].Status])
 			}
 		}
 		fmt.Printf("camion %v %v %v\n\n", state[warehouse.Truck.Status], warehouse.Truck.Capacity, currentLoad)
