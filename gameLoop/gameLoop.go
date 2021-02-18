@@ -12,7 +12,7 @@ import (
 func miniParcel(warehouse gameData.Warehouse) (mini int) {
 	minim := 501
 	for i := range warehouse.Parcels {
-		if warehouse.Parcels[i].Weight < minim {
+		if warehouse.Parcels[i].Weight < minim && warehouse.Parcels[i].Dead == false {
 			minim = warehouse.Parcels[i].Weight
 			if minim == 100 {
 				return minim
@@ -20,6 +20,21 @@ func miniParcel(warehouse gameData.Warehouse) (mini int) {
 		}
 	}
 	return minim
+}
+
+func deliveredAll(wh gameData.Warehouse) int {
+	var tt int
+	for i := range wh.Parcels {
+		if wh.Parcels[i].Dead == false {
+			tt++
+		}
+	}
+	for i := range wh.PalletTrucks {
+		if wh.PalletTrucks[i].Parcel.Weight != 0 {
+			tt++
+		}
+	}
+	return tt
 }
 
 func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
@@ -65,33 +80,34 @@ func GameLoop(warehouse gameData.Warehouse) int {
 		warehouse.PalletTrucks[i].Status = 0
 	}
 	for i := 0; i < warehouse.NbTurn; i++ {
-		minim := miniParcel(warehouse)
-		if warehouse.Truck.Capacity < minim {
-			return -1
-		}
-		if len(warehouse.Parcels) == 0 {
-			return 1
-		}
-		if truckLeft == false && warehouse.Truck.Capacity-currentLoad < minim {
-			warehouse.Truck.Status = 4
-			waitBeforeComing = warehouse.Truck.Upturn
-			truckLeft = true
-		}
+		var minim int
+
 		for i := range warehouse.PalletTrucks {
 			warehouse.PalletTrucks[i].Status = 0
 		}
 		fmt.Printf("tour %v\n", i+1)
 
-		if waitBeforeComing == 0 && truckLeft == true {
-			truckLeft = false
-			currentLoad = 0
-			warehouse.Truck.Status = 3
-		} else if truckLeft == true && waitBeforeComing > 0 {
-			waitBeforeComing--
-		}
-
 		for i := range warehouse.PalletTrucks {
 			// we drop the parcel into truck
+			minim = miniParcel(warehouse)
+			if warehouse.Truck.Capacity < minim {
+				return -1
+			}
+			if (deliveredAll(warehouse)) == 0 {
+				return 1
+			}
+			if truckLeft == false && warehouse.Truck.Capacity-currentLoad < minim {
+				warehouse.Truck.Status = 4
+				waitBeforeComing = warehouse.Truck.Upturn
+				truckLeft = true
+			}
+			if waitBeforeComing == 0 && truckLeft == true {
+				truckLeft = false
+				currentLoad = 0
+				warehouse.Truck.Status = 3
+			} else if truckLeft == true && waitBeforeComing > 0 {
+				waitBeforeComing--
+			}
 			if warehouse.PalletTrucks[i].Parcel.Weight == 0 {
 				giveParcel(&warehouse.PalletTrucks[i], &warehouse)
 			}
@@ -106,20 +122,22 @@ func GameLoop(warehouse gameData.Warehouse) int {
 			if warehouse.PalletTrucks[i].Status != 1 && warehouse.PalletTrucks[i].Status != 2 {
 				m := pathFinding.MapFrom(&warehouse, warehouse.PalletTrucks[i].Pos.X, warehouse.PalletTrucks[i].Pos.Y)
 				r := pathFinding.GetRoute(m, warehouse.Width, warehouse.Height, warehouse.PalletTrucks[i].Parcel.Pos.X, warehouse.PalletTrucks[i].Parcel.Pos.Y)
-				x := r[0][0] - warehouse.PalletTrucks[i].Pos.X
-				y := r[0][1] - warehouse.PalletTrucks[i].Pos.Y
-				res := strconv.Itoa(x) + strconv.Itoa(y)
-				switch res {
-				case "10":
-					warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.RIGHT)
-				case "01":
-					warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.DOWN)
-				case "-10":
-					warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.LEFT)
-				case "0-1":
-					warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.UP)
+				if len(r) != 0 {
+					x := r[0][0] - warehouse.PalletTrucks[i].Pos.X
+					y := r[0][1] - warehouse.PalletTrucks[i].Pos.Y
+					res := strconv.Itoa(x) + strconv.Itoa(y)
+					switch res {
+					case "10":
+						warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.RIGHT)
+					case "01":
+						warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.DOWN)
+					case "-10":
+						warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.LEFT)
+					case "0-1":
+						warehouse.PalletTrucks[i].Pos = gameData.Move(warehouse.PalletTrucks[i].Pos, gameData.UP)
+					}
+					warehouse.PalletTrucks[i].Status = 5
 				}
-				warehouse.PalletTrucks[i].Status = 5
 			}
 			if warehouse.PalletTrucks[i].Status == 1 ||
 				warehouse.PalletTrucks[i].Status == 2 {
