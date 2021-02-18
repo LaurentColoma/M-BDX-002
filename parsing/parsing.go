@@ -10,7 +10,6 @@ import (
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
 )
 
-// Check if the number of arguments is correct
 func NbArgsHandler() bool {
 	if len(os.Args) < 2 {
 		fmt.Println("😱\nError: wrong number of arguments")
@@ -19,7 +18,6 @@ func NbArgsHandler() bool {
 	return true
 }
 
-// Check if the file can be opened
 func OpenFileHandler(err error) bool {
 	if err != nil {
 		fmt.Println("😱\nError: file not supported")
@@ -28,7 +26,6 @@ func OpenFileHandler(err error) bool {
 	return true
 }
 
-// Check if the first line match with awaited format
 func FirstLineHandler(line string, warehouse *gameData.Warehouse) {
 	match, _ := regexp.MatchString(`(\d+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
@@ -36,7 +33,6 @@ func FirstLineHandler(line string, warehouse *gameData.Warehouse) {
 		os.Exit(0)
 	}
 
-	//Following lines are used to split the different string in the line
 	var data = strings.Fields(line)
 	var w, _ = strconv.Atoi(data[0])
 	var h, _ = strconv.Atoi(data[1])
@@ -54,7 +50,6 @@ func FirstLineHandler(line string, warehouse *gameData.Warehouse) {
 	warehouse.NbTurn = n
 }
 
-// Check if the last line match with awaited format
 func LastLineHandler(line string, warehouse *gameData.Warehouse) gameData.Storage {
 	match, _ := regexp.MatchString(`(\d+)\s*(\d+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
@@ -62,7 +57,6 @@ func LastLineHandler(line string, warehouse *gameData.Warehouse) gameData.Storag
 		os.Exit(0)
 	}
 
-	//Following lines are used to split the different string in the line
 	var data = strings.Fields(line)
 	var x, _ = strconv.Atoi(data[0])
 	var y, _ = strconv.Atoi(data[1])
@@ -82,7 +76,6 @@ func LastLineHandler(line string, warehouse *gameData.Warehouse) gameData.Storag
 	return truck
 }
 
-// Check if parcel line match with awaited format
 func ParcelHandler(line string, warehouse *gameData.Warehouse) gameData.Parcel {
 	match, _ := regexp.MatchString(`(\w+)\s*(\d+)\s*(\d+)\s*(\w+)`, line)
 	if match == false {
@@ -90,7 +83,6 @@ func ParcelHandler(line string, warehouse *gameData.Warehouse) gameData.Parcel {
 		os.Exit(0)
 	}
 
-	// Following lines are used to split the different string in the line
 	data := strings.Fields(line)
 	weight := 0
 	var x, _ = strconv.Atoi(data[1])
@@ -123,7 +115,6 @@ func ParcelHandler(line string, warehouse *gameData.Warehouse) gameData.Parcel {
 	return parcel
 }
 
-// Check if pallettruck line match with awaited format
 func PalletTruckHandler(line string, warehouse *gameData.Warehouse) gameData.PalletTruck {
 	match, _ := regexp.MatchString(`(\w+)\s*(\d+)\s*(\d+)`, line)
 	if match == false {
@@ -131,7 +122,6 @@ func PalletTruckHandler(line string, warehouse *gameData.Warehouse) gameData.Pal
 		os.Exit(0)
 	}
 
-	// Following lines are used to split the different string in the line
 	data := strings.Fields(line)
 	var x, _ = strconv.Atoi(data[1])
 	var y, _ = strconv.Atoi(data[2])

@@ -1,9 +1,5 @@
 package gameData
 
-import (
-	"fmt"
-)
-
 type Position struct {
 	X int
 	Y int
@@ -31,7 +27,6 @@ type Storage struct {
 	Upturn   int
 }
 
-// Todo: move these struct in another file
 type Parcel struct {
 	Pos    Position
 	Name   string
@@ -58,28 +53,23 @@ const (
 	LEFT  = iota
 )
 
-// Check if a Position is valid for a pallet truck
 func CheckPosition(pos Position, wh *Warehouse) bool {
 	if pos.X >= wh.Width || pos.X < 0 || pos.Y >= wh.Height || pos.Y < 0 {
-		fmt.Println("Error: Cannot move outside of warehouse")
 		return false
 	}
 	for _, s := range wh.PalletTrucks {
 		if s.Pos.X == pos.X && s.Pos.Y == pos.Y {
-			fmt.Println("Error: An other pallet truck is on this Position")
 			return false
 		}
 	}
 	for _, s := range wh.Parcels {
 		if s.Pos.X == pos.X && s.Pos.Y == pos.Y {
-			fmt.Println("Error: A parcel is on this Position")
 			return false
 		}
 	}
 	return true
 }
 
-// Return a new Position that have applied the direction move
 func Move(pos Position, direction MoveDirection) (newPos Position) {
 	newPos = pos
 	switch direction {
@@ -108,7 +98,6 @@ func PeekParcel(pt *PalletTruck, wh *Warehouse, idx int) bool {
 	if isAdjacent(pt.Pos, wh.Parcels[idx].Pos) {
 		pt.Parcel = wh.Parcels[idx]
 		wh.Parcels[idx] = Parcel{Dead: true}
-		//wh.Parcels = remove(wh.Parcels, idx)
 		return true
 	}
 	return false

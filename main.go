@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"os"
 
@@ -13,14 +12,10 @@ import (
 )
 
 func main() {
-	if parser.NbArgsHandler() == false {
-		os.Exit(0)
-	}
+	parser.NbArgsHandler()
 
 	content, err := os.Open(os.Args[1])
-	if parser.OpenFileHandler(err) == false {
-		os.Exit(0)
-	}
+	parser.OpenFileHandler(err)
 	nb_lines := 0
 	scanner := bufio.NewScanner(content)
 	for scanner.Scan() {
@@ -29,9 +24,7 @@ func main() {
 	content.Close()
 
 	file, err := os.Open(os.Args[1])
-	if parser.OpenFileHandler(err) == false {
-		os.Exit(0)
-	}
+	parser.OpenFileHandler(err)
 	count := 0
 	scanner2 := bufio.NewScanner(file)
 	var warehouse gameData.Warehouse
@@ -48,16 +41,12 @@ func main() {
 		os.Exit(0)
 	}
 	file.Close()
-	wh, _ := json.MarshalIndent(warehouse, "", " ")
-	fmt.Println(string(wh))
-	//start game loop here
 	var m = pathFinding.MapFrom(&warehouse, 1, 2)
-	var p = pathFinding.GetRoute(m, warehouse.Width, warehouse.Height, 2, 0)
-	fmt.Println(m, p)
+	pathFinding.GetRoute(m, warehouse.Width, warehouse.Height, 2, 0)
 	if Loop.GameLoop(warehouse) == 1 {
-		fmt.Println("smiley cool")
+		fmt.Println("🤩\nAll according to our plan")
 	} else {
-		fmt.Println("smiley")
+		fmt.Println("😏\nTurn elapsed")
 	}
 	return
 }

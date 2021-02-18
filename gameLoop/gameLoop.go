@@ -40,8 +40,6 @@ func deliveredAll(wh gameData.Warehouse) int {
 func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
 	var index int
 	var lowest float64
-	// lowest := math.Abs(float64(wh.Parcels[0].Pos.X)-float64(pt.Pos.X)) +
-	// 	math.Abs(float64(wh.Parcels[0].Pos.Y)-float64(pt.Pos.Y))
 	for i := range wh.Parcels {
 		if lowest < math.Abs(float64(wh.Parcels[i].Pos.X)-float64(pt.Pos.X))+
 			math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y)) &&
@@ -79,16 +77,14 @@ func GameLoop(warehouse gameData.Warehouse) int {
 	for i := range warehouse.PalletTrucks {
 		warehouse.PalletTrucks[i].Status = 0
 	}
-	for i := 0; i < warehouse.NbTurn; i++ {
+	for j := 0; j < warehouse.NbTurn; j++ {
 		var minim int
 
 		for i := range warehouse.PalletTrucks {
 			warehouse.PalletTrucks[i].Status = 0
 		}
-		fmt.Printf("tour %v\n", i+1)
 
 		for i := range warehouse.PalletTrucks {
-			// we drop the parcel into truck
 			minim = miniParcel(warehouse)
 			if warehouse.Truck.Capacity < minim {
 				return -1
@@ -96,6 +92,7 @@ func GameLoop(warehouse gameData.Warehouse) int {
 			if (deliveredAll(warehouse)) == 0 {
 				return 1
 			}
+			fmt.Printf("tour %v\n", j+1)
 			if truckLeft == false && warehouse.Truck.Capacity-currentLoad < minim {
 				warehouse.Truck.Status = 4
 				waitBeforeComing = warehouse.Truck.Upturn
