@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strconv"
 
-	PathFinding "github.com/LaurentColoma/M-BDX-002/PathFinding"
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
+	PathFinding "github.com/LaurentColoma/M-BDX-002/pathFinding"
 )
 
 func miniParcel(warehouse gameData.Warehouse) (mini int, index int) {
