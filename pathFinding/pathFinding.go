@@ -76,8 +76,17 @@ func GetRoute(mapf []int, w int, h int, x int, y int) (res [][2]int) {
 
 	if c <= 0 && c != -1 {
 		return nil
-	} else {
-		c = w * h // we just want a very big number
+	} else if c == -1 {
+		var pointsAround = [4][2]int{{x + 1, y}, {x - 1, y}, {x, y + 1}, {x, y - 1}}
+		var min = w * h
+		for _, pa := range pointsAround {
+			if pa[0] >= 0 && pa[1] >= 0 && pa[0] < w && pa[1] < h {
+				if mapf[pa[1]*w+pa[0]] < min && mapf[pa[1]*w+pa[0]] > 0 {
+					min = mapf[pa[1]*w+pa[0]]
+				}
+			}
+		}
+		c = min + 1
 	}
 
 	res = append(res, [2]int{x, y})
