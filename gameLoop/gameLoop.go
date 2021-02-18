@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	gameData "github.com/LaurentColoma/M-BDX-002/gameData"
+	"github.com/LaurentColoma/M-BDX-002/pathFinding"
 )
 
 func miniParcel(warehouse gameData.Warehouse) (mini int, index int) {
@@ -24,9 +25,10 @@ func miniParcel(warehouse gameData.Warehouse) (mini int, index int) {
 }
 
 func giveParcel(pt *gameData.PalletTruck, wh *gameData.Warehouse) {
+	var index int
 	lowest := math.Abs(float64(wh.Parcels[0].Pos.X)-float64(pt.Pos.X)) +
 		math.Abs(float64(wh.Parcels[0].Pos.Y)-float64(pt.Pos.Y))
-	index := 0
+
 	for i := range wh.Parcels {
 		if lowest > math.Abs(float64(wh.Parcels[i].Pos.X)-float64(pt.Pos.X))+
 			math.Abs(float64(wh.Parcels[i].Pos.Y)-float64(pt.Pos.Y)) && wh.Parcels[i].Aimed == false {
@@ -84,8 +86,10 @@ func GameLoop(warehouse gameData.Warehouse) int {
 				giveParcel(&warehouse.PalletTrucks[i], &warehouse)
 			}
 			if warehouse.PalletTrucks[i].Status != 1 && warehouse.PalletTrucks[i].Status != 2 {
-				x := warehouse.PalletTrucks[i].Path[0][0] - warehouse.PalletTrucks[i].Pos.X
-				y := warehouse.PalletTrucks[i].Path[0][1] - warehouse.PalletTrucks[i].Pos.Y
+				m := pathFinding.MapFrom(&warehouse, warehouse.PalletTrucks[i].Pos.X, warehouse.PalletTrucks[i].Pos.Y)
+				r := pathFinding.GetRoute(m, warehouse.Width, warehouse.Height, warehouse.PalletTrucks[i].Parcel.Pos.X, warehouse.PalletTrucks[i].Parcel.Pos.Y)
+				x := r[0][0] - warehouse.PalletTrucks[i].Pos.X
+				y := r[0][1] - warehouse.PalletTrucks[i].Pos.Y
 				res := strconv.Itoa(x) + strconv.Itoa(y)
 				switch res {
 				case "10":
