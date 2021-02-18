@@ -53,7 +53,9 @@ func MapFrom(wh *gameData.Warehouse, x int, y int) []int {
 		mapf[s.Pos.Y*wh.Width+s.Pos.X] = -1
 	}
 	for _, s := range wh.Parcels {
-		mapf[s.Pos.Y*wh.Width+s.Pos.X] = -1
+		if s.Dead == false {
+			mapf[s.Pos.Y*wh.Width+s.Pos.X] = -1
+		}
 	}
 	if wh.Truck.Status == 3 {
 		mapf[wh.Truck.Pos.Y*wh.Width+wh.Truck.Pos.X] = -1
